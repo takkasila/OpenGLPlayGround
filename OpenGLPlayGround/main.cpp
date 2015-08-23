@@ -16,7 +16,7 @@
 using namespace glm;
 
 #include "shader.hpp"
-#include "texture.h"
+#include "texture.hpp"
 
 int main()
 {
@@ -67,11 +67,16 @@ int main()
 	GLuint programID = LoadShaders("SimpleVertexShader.glsl"
 		, "SimpleFragmentShader.glsl");
 
+	//VAO
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
 	//MVP matrix
 	mat4 projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	mat4 view = lookAt(
-		vec3(6, 6, 6)
-		, vec3(3, 0, 0)
+		vec3(3, 3, -3)
+		, vec3(1, 0, 0)
 		, vec3(0, 1, 0)
 		);
 	mat4 model = mat4(1.0f);
@@ -79,10 +84,6 @@ int main()
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	//End of shader
 
-	//VAO
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 
 	//Cube
 	static const GLfloat g_vertex_buffer_data[] = {
@@ -183,6 +184,7 @@ int main()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
+
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// Bind our texture in Texture Unit 0
@@ -215,7 +217,7 @@ int main()
 			, (void*) 0
 		);
 
-		glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
+		glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.hpp" />
-    <ClInclude Include="texture.h" />
+    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleFragmentShader.glsl" />

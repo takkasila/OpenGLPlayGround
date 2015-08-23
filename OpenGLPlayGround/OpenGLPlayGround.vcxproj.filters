@@ -21,10 +21,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shader.hpp">
+    <ClInclude Include="texture.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="texture.h">
+    <ClInclude Include="shader.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
