@@ -75,7 +75,7 @@ int main()
 	//MVP matrix
 	mat4 projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	mat4 view = lookAt(
-		vec3(3, 3, -3)
+		vec3(3, 3, 3)
 		, vec3(1, 0, 0)
 		, vec3(0, 1, 0)
 		);
@@ -175,11 +175,12 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 	
 	//Cube texture
-	GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
-
+	//GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
+	GLuint texture = loadDDS("Resources/uvtemplate.DDS");
+	
 	//Get a handle 
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
-
+	
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
