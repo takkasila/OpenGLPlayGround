@@ -20,6 +20,7 @@ mat4 getProjectionMatrix()
 
 //Initial
 vec3 position = vec3(0, 0, 5);
+// toward -z
 float horizontalAngle = 3.14f;
 float verticalAngle = 0;
 float initialFoV = 45;
@@ -40,7 +41,7 @@ void computeMatricesFromInputs()
 	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
 
 	horizontalAngle += mouseSpeed*float(1024 / 2 - xpos);
-	verticalAngle += mouseSpeed*float(1024 / 2 - ypos);
+	verticalAngle += mouseSpeed*float(768 / 2 - ypos);
 
 	vec3 direction(
 		cos(verticalAngle) * sin(horizontalAngle)
@@ -48,10 +49,10 @@ void computeMatricesFromInputs()
 		, cos(verticalAngle) * cos(horizontalAngle)
 		);
 
-	vec3 right(
-		sin(horizontalAngle - pi<float>() / 2)
+	vec3 right = vec3(
+		sin(horizontalAngle - 3.14f / 2.0f)
 		, 0
-		, cos(horizontalAngle - pi<float>() / 2)
+		, cos(horizontalAngle - 3.14f / 2.0f)
 		);
 
 	vec3 up = cross(right, direction);
