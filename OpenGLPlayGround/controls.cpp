@@ -5,11 +5,11 @@ extern GLFWwindow* window;
 #include "Libraries\glm\glm\gtc\matrix_transform.hpp"
 using namespace glm;
 
-#include "controls.h"
+#include "controls.hpp"
 
 mat4 ViewMatrix;
 mat4 ProjectionMatrix;
-mat4 getViedMatrix()
+mat4 getViewMatrix()
 {
 	return ViewMatrix;
 }
@@ -56,4 +56,38 @@ void computeMatricesFromInputs()
 
 	vec3 up = cross(right, direction);
 
+	//Moving 
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		position += direction * deltaTime * speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		position -= direction * speed * deltaTime;
+	}
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	{
+		position += right * speed * deltaTime;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	{
+		position -= right* speed* deltaTime;
+	}
+
+	float FoV = initialFoV;
+
+	ProjectionMatrix = perspective(
+		FoV
+		, 4.0f/3.0f
+		, 0.1f
+		, 100.0f
+	);
+
+	ViewMatrix = lookAt(
+		position
+		, position + direction
+		, up
+	);
+
+	lastTime = currentTime;
 }

@@ -6,6 +6,7 @@
 
 #include "Libraries\GL\GLFW\glfw3.h"
 //#include <GLFW/glfw3.h>
+GLFWwindow* window;
 
 #include "Libraries\glm\glm\glm.hpp"
 //#include <glm/glm.hpp>
@@ -17,6 +18,7 @@ using namespace glm;
 
 #include "shader.hpp"
 #include "texture.hpp"
+#include "controls.hpp"
 
 int main()
 {
@@ -32,7 +34,6 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window;
 	window = glfwCreateWindow(
 		1024, 768
 		, "Tutorial 01"
@@ -60,7 +61,20 @@ int main()
 	//Z-Buffer
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	glEnable(GL_CULL_FACE);
 	//End of setting
+	/*
+	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	// Camera matrix
+	glm::mat4 View = glm::lookAt(
+		glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 0), // and looks at the origin
+		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		);
+	// Model matrix : an identity matrix (model will be at the origin)
+	glm::mat4 Model = glm::mat4(1.0f);
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around*/
 
 	//=====================================================
 	//Init Shader
@@ -71,19 +85,9 @@ int main()
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
-
-	//MVP matrix
-	mat4 projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	mat4 view = lookAt(
-		vec3(3, 3, -3)
-		, vec3(1, 0, 0)
-		, vec3(0, 1, 0)
-		);
-	mat4 model = mat4(1.0f);
-	mat4 MVP = projection * view * model;
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 	//End of shader
-
+	
+	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	//Cube
 	static const GLfloat g_vertex_buffer_data[] = {
@@ -184,6 +188,15 @@ int main()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
+
+		//MVP matrix
+		
+		computeMatricesFromInputs();
+		mat4 projection = getProjectionMatrix();
+		mat4 view = getViewMatrix();
+		mat4 model = mat4(1.0f);
+		mat4 MVP = projection * view * model;
+		
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 

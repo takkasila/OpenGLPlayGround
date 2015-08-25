@@ -79,4 +79,5 @@ GLuint loadBMP_custom(const char* imagepath)
 
 	// Gen Mip maps
 	glGenerateMipmap(GL_TEXTURE_2D);
+	return textureID;
 }
