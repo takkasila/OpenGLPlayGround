@@ -9,6 +9,6 @@ GLuint loadBMP_custom(const char * imagepath);
 //// or do it yourself (just like loadBMP_custom and loadDDS)
 //// Load a .TGA file using GLFW's own loader
 //GLuint loadTGA_glfw(const char * imagepath);
-
+GLuint loadDDS(const char* imagePath);
 
 #endif

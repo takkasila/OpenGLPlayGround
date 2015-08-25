@@ -63,19 +63,7 @@ int main()
 	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 	//End of setting
-	/*
-	glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	// Camera matrix
-	glm::mat4 View = glm::lookAt(
-		glm::vec3(4, 3, 3), // Camera is at (4,3,3), in World Space
-		glm::vec3(0, 0, 0), // and looks at the origin
-		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-		);
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::mat4(1.0f);
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around*/
-
+	
 	//=====================================================
 	//Init Shader
 	GLuint programID = LoadShaders("SimpleVertexShader.glsl"
@@ -136,50 +124,52 @@ int main()
 	//Texture
 	// Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
 	static const GLfloat g_uv_buffer_data[] = {
-		0.000059f, 1.0f - 0.000004f,
-		0.000103f, 1.0f - 0.336048f,
-		0.335973f, 1.0f - 0.335903f,
-		1.000023f, 1.0f - 0.000013f,
-		0.667979f, 1.0f - 0.335851f,
-		0.999958f, 1.0f - 0.336064f,
-		0.667979f, 1.0f - 0.335851f,
-		0.336024f, 1.0f - 0.671877f,
-		0.667969f, 1.0f - 0.671889f,
-		1.000023f, 1.0f - 0.000013f,
-		0.668104f, 1.0f - 0.000013f,
-		0.667979f, 1.0f - 0.335851f,
-		0.000059f, 1.0f - 0.000004f,
-		0.335973f, 1.0f - 0.335903f,
-		0.336098f, 1.0f - 0.000071f,
-		0.667979f, 1.0f - 0.335851f,
-		0.335973f, 1.0f - 0.335903f,
-		0.336024f, 1.0f - 0.671877f,
-		1.000004f, 1.0f - 0.671847f,
-		0.999958f, 1.0f - 0.336064f,
-		0.667979f, 1.0f - 0.335851f,
-		0.668104f, 1.0f - 0.000013f,
-		0.335973f, 1.0f - 0.335903f,
-		0.667979f, 1.0f - 0.335851f,
-		0.335973f, 1.0f - 0.335903f,
-		0.668104f, 1.0f - 0.000013f,
-		0.336098f, 1.0f - 0.000071f,
-		0.000103f, 1.0f - 0.336048f,
-		0.000004f, 1.0f - 0.671870f,
-		0.336024f, 1.0f - 0.671877f,
-		0.000103f, 1.0f - 0.336048f,
-		0.336024f, 1.0f - 0.671877f,
-		0.335973f, 1.0f - 0.335903f,
-		0.667969f, 1.0f - 0.671889f,
-		1.000004f, 1.0f - 0.671847f,
-		0.667979f, 1.0f - 0.335851f
+		0.000059f, 0.000004f,
+		0.000103f, 0.336048f,
+		0.335973f, 0.335903f,
+		1.000023f, 0.000013f,
+		0.667979f, 0.335851f,
+		0.999958f, 0.336064f,
+		0.667979f, 0.335851f,
+		0.336024f, 0.671877f,
+		0.667969f, 0.671889f,
+		1.000023f, 0.000013f,
+		0.668104f, 0.000013f,
+		0.667979f, 0.335851f,
+		0.000059f, 0.000004f,
+		0.335973f, 0.335903f,
+		0.336098f, 0.000071f,
+		0.667979f, 0.335851f,
+		0.335973f, 0.335903f,
+		0.336024f, 0.671877f,
+		1.000004f, 0.671847f,
+		0.999958f, 0.336064f,
+		0.667979f, 0.335851f,
+		0.668104f, 0.000013f,
+		0.335973f, 0.335903f,
+		0.667979f, 0.335851f,
+		0.335973f, 0.335903f,
+		0.668104f, 0.000013f,
+		0.336098f, 0.000071f,
+		0.000103f, 0.336048f,
+		0.000004f, 0.671870f,
+		0.336024f, 0.671877f,
+		0.000103f, 0.336048f,
+		0.336024f, 0.671877f,
+		0.335973f, 0.335903f,
+		0.667969f, 0.671889f,
+		1.000004f, 0.671847f,
+		0.667979f, 0.335851f
 	};
+
 	GLuint cubeUVBuffer;
 	glGenBuffers(1, &cubeUVBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeUVBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
 	
 	//Cube texture
-	GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
+	//GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
+	GLuint texture = loadDDS("Resources/uvtemplate.dds");
 
 	//Get a handle 
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
