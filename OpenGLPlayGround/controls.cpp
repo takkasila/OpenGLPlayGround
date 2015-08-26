@@ -58,21 +58,31 @@ void computeMatricesFromInputs()
 	vec3 up = cross(right, direction);
 
 	//Moving 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		position += direction * deltaTime * speed;
 	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		position -= direction * speed * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		position += right * speed * deltaTime;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		position -= right* speed* deltaTime;
+	}
+
+	// Up and down
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		position += up * speed * deltaTime;
+	}
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		position -= up * speed * deltaTime;
 	}
 
 	float FoV = initialFoV;
