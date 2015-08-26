@@ -22,6 +22,7 @@ using namespace glm;
 
 int main()
 {
+#pragma region "Init"
 	//Init glfw and window
 	if (!glfwInit())
 	{
@@ -62,9 +63,9 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_ALWAYS);
 	glEnable(GL_CULL_FACE);
-	//End of setting
+
+#pragma endregion
 	
-	//=====================================================
 	//Init Shader
 	GLuint programID = LoadShaders("SimpleVertexShader.glsl"
 		, "SimpleFragmentShader.glsl");
@@ -77,6 +78,7 @@ int main()
 	
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
+#pragma region "CubeData"
 	//Cube
 	static const GLfloat g_vertex_buffer_data[] = {
 		-1.0f, -1.0f, -1.0f, // triangle 1 : begin
@@ -166,7 +168,9 @@ int main()
 	glGenBuffers(1, &cubeUVBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeUVBuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
-	
+
+#pragma endregion
+
 	//Cube texture
 	//GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
 	GLuint texture = loadDDS("Resources/uvtemplate.dds");
@@ -187,7 +191,6 @@ int main()
 		mat4 model = mat4(1.0f);
 		mat4 MVP = projection * view * model;
 		
-
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// Bind our texture in Texture Unit 0
