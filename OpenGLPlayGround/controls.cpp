@@ -28,6 +28,8 @@ float initialFoV = 45;
 float speed = 3;	//3 unit/sec
 float mouseSpeed = 0.005f;
 
+vec3 up = vec3(0, 1, 0);
+
 void computeMatricesFromInputs()
 {
 	static double lastTime = glfwGetTime();
@@ -48,7 +50,6 @@ void computeMatricesFromInputs()
 		, sin(verticalAngle)
 		, cos(verticalAngle) * cos(horizontalAngle)
 		);
-
 	vec3 right = vec3(
 		sin(horizontalAngle - 3.14f / 2.0f)
 		, 0
@@ -101,4 +102,46 @@ void computeMatricesFromInputs()
 	);
 
 	lastTime = currentTime;
+}
+
+vec3 orbit_pos = vec3(0, 0, 5);
+vec3 orbit_up = vec3(0, 1, 0);
+float orbit_radius = 5;
+float orbit_degrees = 5;
+
+mat4 orbit_ProjMat;
+mat4 orbit_ViewMat;
+
+mat4 getOrbitProjMat()
+{
+	return orbit_ProjMat;
+}
+
+mat4 getOrbitViewMat()
+{
+	return orbit_ViewMat;
+}
+
+void computeMatOrbit()
+{
+	//Verticle
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		//orbit_pos = rotate(orbit_degrees, orbit_up) * orbit_pos;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+
+	}
+	//Horizon
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+
+	}
+
+
 }

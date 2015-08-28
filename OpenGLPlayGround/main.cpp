@@ -74,7 +74,7 @@ int main()
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
-	//End of shader
+	//End of shadertas
 	
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
@@ -178,18 +178,37 @@ int main()
 	//Get a handle 
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
+	bool orbital = 0;
+	mat4 projection;
+	mat4 view;
+	mat4 model;
+	mat4 MVP;
+
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 
-		//MVP matrix
+		if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+			orbital = false;
+		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+			orbital = true;
 		
-		computeMatricesFromInputs();
-		mat4 projection = getProjectionMatrix();
-		mat4 view = getViewMatrix();
-		mat4 model = mat4(1.0f);
-		mat4 MVP = projection * view * model;
+		if (!orbital)
+		{
+			computeMatricesFromInputs();
+			projection = getProjectionMatrix();
+			view = getViewMatrix();
+		}
+		else
+		{
+			computeMatOrbit();
+			projection = getOrbitProjMat();
+			view = getOrbitViewMat();
+		}
+		model = mat4(1.0f);
+		MVP = projection * view * model;
+
 		
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
