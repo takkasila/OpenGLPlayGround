@@ -127,6 +127,9 @@ void computeMatOrbit()
 	//Verticle
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
+		
+		mat4x4 rotH = glm::rotate(mat4(1.0f), orbit_radius, orbit_pos);
+		
 		//orbit_pos = rotate(orbit_degrees, orbit_up) * orbit_pos;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
