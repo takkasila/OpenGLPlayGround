@@ -1,5 +1,6 @@
 #include <stdio.h.>
 #include <stdlib.h>
+#include <vector>
 
 #include "Libraries\GL\GLEW\glew.h"
 //#include <GLEW/glew.h> also working
@@ -14,11 +15,13 @@ GLFWwindow* window;
 #include "Libraries\glm\glm\gtc\matrix_transform.hpp"
 //#include <glm\gtc\matrix_transform.hpp>
 
+using namespace std;
 using namespace glm;
 
 #include "shader.hpp"
 #include "texture.hpp"
 #include "controls.hpp"
+#include "objloader.h"
 
 int main()
 {
@@ -57,11 +60,12 @@ int main()
 		return -1;
 	}
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
 	glClearColor(0, 0, 0.3f, 0);
 
 	//Z-Buffer
 	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_ALWAYS);
+	glDepthFunc(GL_LESS);
 	glEnable(GL_CULL_FACE);
 
 #pragma endregion
@@ -78,136 +82,36 @@ int main()
 	
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
-#pragma region "CubeData"
-	//Cube
-	static const GLfloat g_vertex_buffer_data[] = {
-		-1.0f, -1.0f, -1.0f, // triangle 1 : begin
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f, // triangle 1 : end
-		1.0f, 1.0f, -1.0f, // triangle 2 : begin
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f, // triangle 2 : end
-		1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		-1.0f, -1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, -1.0f,
-		1.0f, -1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, -1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, -1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, 1.0f, 1.0f,
-		-1.0f, 1.0f, 1.0f,
-		1.0f, -1.0f, 1.0f
-	};
+	vector<vec3> vertices;
+	vector<vec2> uvs;
+	vector<vec3> normals;
+
+	bool res = loadOBJ("Resources/cube.obj", vertices, uvs, normals);
+	
+	GLuint texture = loadDDS("Resources/uvtemplate.DDS");
+	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
-	//Texture
-	// Two UV coordinatesfor each vertex. They were created with Blender. You'll learn shortly how to do this yourself.
-	static const GLfloat g_uv_buffer_data[] = {
-		0.000059f, 0.000004f,
-		0.000103f, 0.336048f,
-		0.335973f, 0.335903f,
-		1.000023f, 0.000013f,
-		0.667979f, 0.335851f,
-		0.999958f, 0.336064f,
-		0.667979f, 0.335851f,
-		0.336024f, 0.671877f,
-		0.667969f, 0.671889f,
-		1.000023f, 0.000013f,
-		0.668104f, 0.000013f,
-		0.667979f, 0.335851f,
-		0.000059f, 0.000004f,
-		0.335973f, 0.335903f,
-		0.336098f, 0.000071f,
-		0.667979f, 0.335851f,
-		0.335973f, 0.335903f,
-		0.336024f, 0.671877f,
-		1.000004f, 0.671847f,
-		0.999958f, 0.336064f,
-		0.667979f, 0.335851f,
-		0.668104f, 0.000013f,
-		0.335973f, 0.335903f,
-		0.667979f, 0.335851f,
-		0.335973f, 0.335903f,
-		0.668104f, 0.000013f,
-		0.336098f, 0.000071f,
-		0.000103f, 0.336048f,
-		0.000004f, 0.671870f,
-		0.336024f, 0.671877f,
-		0.000103f, 0.336048f,
-		0.336024f, 0.671877f,
-		0.335973f, 0.335903f,
-		0.667969f, 0.671889f,
-		1.000004f, 0.671847f,
-		0.667979f, 0.335851f
-	};
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), &vertices[0], GL_STATIC_DRAW);
 
 	GLuint cubeUVBuffer;
 	glGenBuffers(1, &cubeUVBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeUVBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(vec2), &uvs[0], GL_STATIC_DRAW);
 
-#pragma endregion
-
-	//Cube texture
-	//GLuint texture = loadBMP_custom("Resources/uvtemplate.bmp");
-	GLuint texture = loadDDS("Resources/uvtemplate.dds");
-
-	//Get a handle 
-	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
-
-	bool orbital = 0;
-	mat4 projection;
-	mat4 view;
-	mat4 model;
-	mat4 MVP;
 
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 
-		if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
-			orbital = false;
-		if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-			orbital = true;
-		
-		if (!orbital)
-		{
-			computeMatricesFromInputs();
-			projection = getProjectionMatrix();
-			view = getViewMatrix();
-		}
-		else
-		{
-			computeMatOrbit();
-			projection = getOrbitProjMat();
-			view = getOrbitViewMat();
-		}
-		model = mat4(1.0f);
-		MVP = projection * view * model;
+		computeMatricesFromInputs();
+		mat4 projection = getProjectionMatrix();
+		mat4 view = getViewMatrix();
+		mat4 model = mat4(1.0f);
+		mat4 MVP = projection * view * model;
 
 		
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
@@ -242,7 +146,7 @@ int main()
 			, (void*) 0
 		);
 
-		glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
