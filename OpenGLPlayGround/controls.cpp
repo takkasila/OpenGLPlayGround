@@ -19,7 +19,7 @@ mat4 getProjectionMatrix()
 }
 
 //Initial
-vec3 position = vec3(0, 0, 5);
+vec3 position = vec3(0, 0, 3.5f);
 // toward -z
 float horizontalAngle = 3.14f;
 float verticalAngle = 0;
@@ -28,7 +28,7 @@ float initialFoV = 45;
 float speed = 3;	//3 unit/sec
 float mouseSpeed = 0.005f;
 
-vec3 up = vec3(0, 1, 0);
+//vec3 up = vec3(0, 1, 0);
 
 void computeMatricesFromInputs()
 {

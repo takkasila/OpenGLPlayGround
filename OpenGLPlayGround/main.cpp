@@ -60,8 +60,8 @@ int main()
 		return -1;
 	}
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	glfwSetCursorPos(window, 1024 / 2, 768 / 2);
-	glClearColor(0, 0, 0.3f, 0);
+	glfwSetCursorPos(window, 1024 / 2.0f, 768 / 2.0f);
+	glClearColor(0.95, 0.95, 0.95, 0);
 
 	//Z-Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -126,7 +126,7 @@ int main()
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
 
 		//Light!
-		vec3 lightPos = vec3(4, 4, 4);
+		vec3 lightPos = vec3(3, 3, 6);
 		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z );
 
 		// Bind our texture in Texture Unit 0
@@ -175,6 +175,7 @@ int main()
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 
 		// Swap buffer
 		glfwSwapBuffers(window);
@@ -186,8 +187,9 @@ int main()
 	// Cleanup
 	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteBuffers(1, &UVBuffer);
+	glDeleteBuffers(1, &normalBuffer);
 	glDeleteProgram(programID);
-	glDeleteTextures(1, &TextureID);
+	glDeleteTextures(1, &texture);
 	glDeleteVertexArrays(1, &VertexArrayID);
 
 	// Close OpenGL windoow and terminate GLFW

@@ -22,12 +22,19 @@ void main()
 	//Material
 	vec3 MaterialDiffuseColor = texture2D( myTextureSampler, UV).rgb;
 	vec3 MaterialAmbientColor = vec3(0.1, 0.1, 0.1) * MaterialDiffuseColor;
-	vec3 MaterialSpecularColor = vec3(0.3, 0.3, 0.3);
+	vec3 MaterialSpecularColor = vec3(0.3, 0.3, 0.3) ;
 
 	vec3 n = normalize(Normal_cameraspace);
 	vec3 l = normalize(LightDirection_cameraspace);
 
 	float cosTheta = clamp( dot( n, l), 0, 1);
+
+	// specular
+	vec3 E = normalize(EyeDirection_cameraspace);
+	//reflect 
+	vec3 R = reflect(-l, n);
+	float cosAlpha = clamp(dot(R, E), 0, 1);
+
 
 	float distance = length(LightPosition_worldspace - Position_worldspace);
 	color = 
@@ -35,6 +42,8 @@ void main()
 		MaterialDiffuseColor * LightColor * LightPower * cosTheta/(distance * distance)
 		//Ambient
 		+ MaterialAmbientColor
-		;
+		//Specular
+		+ MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha, 20)/(distance*distance)
+	;
 
 }
