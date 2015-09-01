@@ -88,7 +88,7 @@ int main()
 
 	bool res = loadOBJ("Resources/cube.obj", vertices, uvs, normals);
 	
-	GLuint texture = loadDDS("Resources/uvtemplate.DDS");
+	GLuint texture = loadDDS("Resources/uvmap.DDS");
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
 	GLuint vertexbuffer;
