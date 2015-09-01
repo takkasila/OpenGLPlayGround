@@ -81,12 +81,14 @@ int main()
 	//End of shadertas
 	
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+	GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+	GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 
 	vector<vec3> vertices;
 	vector<vec2> uvs;
 	vector<vec3> normals;
 
-	bool res = loadOBJ("Resources/cube.obj", vertices, uvs, normals);
+	bool res = loadOBJ("Resources/suzanne.obj", vertices, uvs, normals);
 	
 	GLuint texture = loadDDS("Resources/uvmap.DDS");
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
@@ -96,12 +98,17 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), &vertices[0], GL_STATIC_DRAW);
 
-	GLuint cubeUVBuffer;
-	glGenBuffers(1, &cubeUVBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeUVBuffer);
+	GLuint UVBuffer;
+	glGenBuffers(1, &UVBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, UVBuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(vec2), &uvs[0], GL_STATIC_DRAW);
 
+	GLuint normalBuffer;
+	glGenBuffers(1, &normalBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(vec3), &normals[0], GL_STATIC_DRAW);
 
+	GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -115,6 +122,12 @@ int main()
 
 		
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &model[0][0]);
+		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
+
+		//Light!
+		vec3 lightPos = vec3(4, 4, 4);
+		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z );
 
 		// Bind our texture in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);
@@ -136,10 +149,22 @@ int main()
 
 		//2nd attrib: UVs
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, cubeUVBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, UVBuffer);
 		glVertexAttribPointer(
 			1
 			, 2
+			, GL_FLOAT
+			, GL_FALSE
+			, 0
+			, (void*) 0
+		);
+
+		//3rd attrib: Normal
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+		glVertexAttribPointer(
+			2	
+			, 3
 			, GL_FLOAT
 			, GL_FALSE
 			, 0
@@ -160,7 +185,7 @@ int main()
 
 	// Cleanup
 	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &cubeUVBuffer);
+	glDeleteBuffers(1, &UVBuffer);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &TextureID);
 	glDeleteVertexArrays(1, &VertexArrayID);
