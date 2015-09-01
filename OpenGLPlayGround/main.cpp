@@ -126,7 +126,7 @@ int main()
 		glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &view[0][0]);
 
 		//Light!
-		vec3 lightPos = vec3(3, 3, 6);
+		vec3 lightPos = vec3(3, 3, 5);
 		glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z );
 
 		// Bind our texture in Texture Unit 0
